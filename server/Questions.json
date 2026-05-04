@@ -1,0 +1,72 @@
+[
+  {
+    "id": 1,
+    "category": "Physical Layer",
+    "question": "Which of the following is a Physical Layer entity?",
+    "options": ["IP Address", "MAC Address", "Network Interface Card", "Port Number"],
+    "answer": "Network Interface Card"
+  },
+  {
+    "id": 2,
+    "category": "Data Link Layer",
+    "question": "Which PDU is associated with the Data Link layer?",
+    "options": ["Segment", "Packet", "Frame", "Bits"],
+    "answer": "Frame"
+  },
+  {
+    "id": 3,
+    "category": "Network Layer",
+    "question": "Which device is used to connect different networks and operates at Layer 3?",
+    "options": ["Switch", "Hub", "Router", "Repeater"],
+    "answer": "Router"
+  },
+  {
+    "id": 4,
+    "category": "Physical Layer",
+    "question": "What is the primary unit of data at the Physical Layer?",
+    "options": ["Frames", "Packets", "Segments", "Bits"],
+    "answer": "Bits"
+  },
+  {
+    "id": 5,
+    "category": "Data Link Layer",
+    "question": "Which sub-layer of the Data Link layer is responsible for hardware addressing?",
+    "options": ["LLC", "MAC", "IP", "TCP"],
+    "answer": "MAC"
+  },
+  {
+    "id": 6,
+    "category": "Network Layer",
+    "question": "ICMP (Internet Control Message Protocol) operates at which layer?",
+    "options": ["Layer 2", "Layer 3", "Layer 4", "Layer 5"],
+    "answer": "Layer 3"
+  },
+  {
+    "id": 7,
+    "category": "Transport Layer",
+    "question": "Which layer provides reliable end-to-end delivery of data?",
+    "options": ["Network", "Session", "Data Link", "Transport"],
+    "answer": "Transport"
+  },
+  {
+    "id": 8,
+    "category": "Physical Layer",
+    "question": "Which cable type is common at Layer 1 for high-speed long-distance networking?",
+    "options": ["Coaxial", "UTP Cat5e", "Fiber Optic", "STP"],
+    "answer": "Fiber Optic"
+  },
+  {
+    "id": 9,
+    "category": "Data Link Layer",
+    "question": "Which protocol is commonly used at the Data Link layer for local networks?",
+    "options": ["Ethernet", "IP", "FTP", "SNMP"],
+    "answer": "Ethernet"
+  },
+  {
+    "id": 10,
+    "category": "Network Layer",
+    "question": "What is the primary function of the Network Layer?",
+    "options": ["Framing", "Routing", "Process-to-process delivery", "Data encryption"],
+    "answer": "Routing"
+  }
+]
