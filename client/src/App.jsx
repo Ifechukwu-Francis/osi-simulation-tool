@@ -1,58 +1,93 @@
-import React, { useEffect, useState } from 'react'
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls, MeshDistortMaterial } from '@react-three/drei'
+import { Routes, Route, Navigate } from 'react-router-dom';
+import HeroSection from './HomePage/HeroSection.jsx';
+import AboutSection from './HomePage/AboutSection.jsx';
+import Navbar from './HomePage/Navbar.jsx'; 
+import Footer from './HomePage/Footer.jsx';
+import QuizSection from './HomePage/QuizSection.jsx';
+import Admin from './Admin';
+import { S } from './HomePage/components/light.js';
+import SimulatorPage from './Pages/SimulatorPage.jsx';
 
-function App() {
-  const [questions, setQuestions] = useState([]);
+// --- AUTHENTICATION LOGIC ---
+const ProtectedRoute = ({ children }) => {
+  const token = sessionStorage.getItem('admin_token');
+  return token === import.meta.env.VITE_ADMIN_TOKEN
+    ? children
+    : <Navigate to="/admin-login" replace />;
+};
 
-  // Fetching data from your Node.js server
-  useEffect(() => {
-    fetch('http://localhost:5000/api/questions/random')
-      .then(res => res.json())
-      .then(data => {
-        setQuestions(data);
-        console.log("Data received from backend:", data);
-      })
-      .catch(err => console.error("Server not reached:", err));
-  }, []);
+const AdminLogin = () => {
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const input = e.target.elements.token.value.trim();
+    if (input === import.meta.env.VITE_ADMIN_TOKEN) {
+      sessionStorage.setItem('admin_token', input);
+      window.location.href = '/admin';
+    } else {
+      alert('Invalid token');
+    }
+  };
 
   return (
-    <div style={{ width: '100vw', height: '100vh', background: '#111', position: 'relative' }}>
-      
-      {/* 3D ENGINE SECTION */}
-      <Canvas camera={{ position: [0, 0, 5] }}>
-        <ambientLight intensity={0.5} />
-        <pointLight position={[10, 10, 10]} />
-        
-        <mesh>
-          <boxGeometry args={[2, 2, 2]} />
-          <MeshDistortMaterial color="#3498db" speed={2} distort={0.3} />
-        </mesh>
-
-        <OrbitControls />
-      </Canvas>
-
-      {/* OVERLAY UI SECTION */}
-      <div style={{ position: 'absolute', top: '20px', left: '20px', color: 'white', pointerEvents: 'none' }}>
-        <h1 style={{ margin: 0 }}>OSI Simulation Project</h1>
-        <p style={{ color: '#aaa' }}>3D Engine: <span style={{ color: '#2ecc71' }}>Active</span></p>
-        <p style={{ color: '#aaa' }}>Backend API: <span style={{ color: questions.length > 0 ? '#2ecc71' : '#e74c3c' }}>
-          {questions.length > 0 ? 'Connected' : 'Connecting...'}
-        </span></p>
-      </div>
-
-      {/* SHOWING DATA FROM BACKEND */}
-      <div style={{ position: 'absolute', bottom: '20px', left: '20px', background: 'rgba(0,0,0,0.7)', padding: '15px', borderRadius: '8px', color: 'white', maxWidth: '300px' }}>
-        <h3>Sample Question from DB:</h3>
-        {questions.length > 0 ? (
-          <p>{questions[0].question}</p>
-        ) : (
-          <p>Waiting for server...</p>
-        )}
-      </div>
-
+    <div style={{ ...S.page, justifyContent: 'center', minHeight: '80vh' }}>
+      <form onSubmit={handleLogin} style={S.adminForm}>
+        <h2 style={{ color: 'white', marginBottom: '15px' }}>Admin Access</h2>
+        <input
+          name="token"
+          type="password"
+          placeholder="Enter admin token"
+          style={S.adminInput}
+        />
+        <button type="submit" style={S.adminButton(false)}>
+          Login
+        </button>
+      </form>
     </div>
-  )
-}
+  );
+};
 
-export default App
+// --- MAIN APPLICATION ---
+const App = () => {
+  return (
+    <div style={S.pageWrapper}>
+      {/* Navbar stays at the top for all pages */}
+      <Navbar /> 
+      
+      <main style={{ flexGrow: 1 }}>
+        <Routes>
+          {/* Main Landing Page */}
+          <Route path="/" element={
+            <>
+              <HeroSection />
+              <AboutSection />
+              <QuizSection /> 
+            </>
+          } />
+
+          {/* OSI Simulation Page */}
+          <Route path="/simulator" element={<SimulatorPage />} />
+
+          {/* Admin & Security Routes */}
+          <Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/admin" element={
+            <ProtectedRoute>
+              <Admin />
+            </ProtectedRoute>
+          } />
+
+          {/* 404 Fallback */}
+          <Route path="*" element={
+            <div style={{ color: 'white', textAlign: 'center', marginTop: '100px', minHeight: '60vh' }}>
+              <h1>404 — Page Not Found</h1>
+              <p>The packet you are looking for has been dropped.</p>
+            </div>
+          } />
+        </Routes>
+      </main>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default App;
