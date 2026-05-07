@@ -403,13 +403,12 @@ export const S = {
     backgroundClip: 'text',
   },
 
-    quizToggleWrapper: {
+  quizToggleWrapper: {
     display: 'inline-flex',
-    backgroundColor: '#ffffff',
+    backgroundColor: 'transparent',
     padding: '6px',
     borderRadius: '12px',
-    border: '1px solid #e2e8f0',
-    boxShadow: '0 2px 10px rgba(0, 0, 0, 0.04)',
+    gap: '12px',
   },
 
   center: {
@@ -475,6 +474,7 @@ export const S = {
     maxWidth: '540px',
     position: 'relative',
     boxShadow: '0 4px 20px rgba(0, 0, 0, 0.04)',
+    margin: '0 auto',
   },
 
   accent: {

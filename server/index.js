@@ -24,6 +24,21 @@ initDb().then(database => {
 
 // --- ROUTES ---
 
+// --- PROTOCOL ANSWER KEY (Server-side only, never sent to frontend) ---
+const PROTOCOL_ANSWERS = {
+  1: { // Part 1: Layers 7-4
+    "HTTP": 7, "FTP": 7, "SMTP": 7, "DNS": 7, "SNMP": 7,
+    "SSL/TLS": 6, "JPEG": 6, "ASCII": 6, "MPEG": 6, "GIF": 6,
+    "NetBIOS": 5, "RPC": 5, "SMB": 5, "SOCKS": 5,
+    "TCP": 4, "UDP": 4, "SCTP": 4
+  },
+  2: { // Part 2: Layers 3-1
+    "IPv4": 3, "IPv6": 3, "ICMP": 3, "ARP": 3, "IPsec": 3,
+    "Ethernet": 2, "Wi-Fi (802.11)": 2, "PPP": 2, "MAC": 2,
+    "RJ45": 1, "Fiber Optics": 1, "Radio Waves": 1, "Bluetooth": 1
+  }
+};
+
 // 1. GET all questions (to verify your bank)
 app.get('/api/questions', async (req, res) => {
   try {
@@ -101,4 +116,26 @@ app.delete('/api/questions/:id', async (req, res) => {
     console.error("DELETE /api/questions error:", err);
     res.status(500).json({ error: err.message });
   }
+});
+
+// 5. Check protocol matching answers (server-side validation)
+app.post('/api/questions/check-protocols', (req, res) => {
+  const { answers, part } = req.body;
+
+  if (!answers || !part || !PROTOCOL_ANSWERS[part]) {
+    return res.status(400).json({ error: "Invalid request. Part and answers required." });
+  }
+
+  const answerKey = PROTOCOL_ANSWERS[part];
+  let correct = 0;
+  let total = 0;
+
+  for (const [protocol, userLayer] of Object.entries(answers)) {
+    total++;
+    if (answerKey[protocol] === userLayer) {
+      correct++;
+    }
+  }
+
+  res.json({ correct, total });
 });

@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import HeroSection from './HomePage/HeroSection.jsx';
 import AboutSection from './HomePage/AboutSection.jsx';
 import Navbar from './HomePage/Navbar.jsx'; 
@@ -19,26 +19,47 @@ const ProtectedRoute = ({ children }) => {
 const AdminLogin = () => {
   const handleLogin = (e) => {
     e.preventDefault();
-    const input = e.target.elements.token.value.trim();
-    if (input === import.meta.env.VITE_ADMIN_TOKEN) {
-      sessionStorage.setItem('admin_token', input);
+    const username = e.target.elements.username.value.trim();
+    const password = e.target.elements.password.value.trim();
+    
+    if (
+      username === import.meta.env.VITE_ADMIN_USERNAME &&
+      password === import.meta.env.VITE_ADMIN_PASSWORD
+    ) {
+      sessionStorage.setItem('admin_token', import.meta.env.VITE_ADMIN_TOKEN);
       window.location.href = '/admin';
     } else {
-      alert('Invalid token');
+      alert('Invalid username or password');
     }
   };
 
   return (
-    <div style={{ ...S.page, justifyContent: 'center', minHeight: '80vh' }}>
+    <div style={{ 
+      display: 'flex', 
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      justifyContent: 'center', 
+      minHeight: '100vh',
+      backgroundColor: '#f8fafc',
+      fontFamily: 'Inter, system-ui, sans-serif',
+    }}>
       <form onSubmit={handleLogin} style={S.adminForm}>
-        <h2 style={{ color: 'white', marginBottom: '15px' }}>Admin Access</h2>
+        <h2 style={{ color: '#1e293b', marginBottom: '24px', textAlign: 'center', fontSize: '1.5rem', fontWeight: '700' }}>
+          Admin Login
+        </h2>
         <input
-          name="token"
-          type="password"
-          placeholder="Enter admin token"
+          name="username"
+          type="text"
+          placeholder="Username"
           style={S.adminInput}
         />
-        <button type="submit" style={S.adminButton(false)}>
+        <input
+          name="password"
+          type="password"
+          placeholder="Password"
+          style={S.adminInput}
+        />
+        <button type="submit" style={S.adminButton}>
           Login
         </button>
       </form>
@@ -48,10 +69,13 @@ const AdminLogin = () => {
 
 // --- MAIN APPLICATION ---
 const App = () => {
+  const location = useLocation();
+  const isAdminPage = location.pathname.startsWith('/admin');
+
   return (
     <div style={S.pageWrapper}>
-      {/* Navbar stays at the top for all pages */}
-      <Navbar /> 
+      {/* Hide navbar on admin pages */}
+      {!isAdminPage && <Navbar />}
       
       <main style={{ flexGrow: 1 }}>
         <Routes>
@@ -77,7 +101,7 @@ const App = () => {
 
           {/* 404 Fallback */}
           <Route path="*" element={
-            <div style={{ color: 'white', textAlign: 'center', marginTop: '100px', minHeight: '60vh' }}>
+            <div style={{ color: '#1e293b', textAlign: 'center', marginTop: '100px', minHeight: '60vh' }}>
               <h1>404 — Page Not Found</h1>
               <p>The packet you are looking for has been dropped.</p>
             </div>
@@ -85,7 +109,8 @@ const App = () => {
         </Routes>
       </main>
 
-      <Footer />
+      {/* Hide footer on admin pages */}
+      {!isAdminPage && <Footer />}
     </div>
   );
 };
