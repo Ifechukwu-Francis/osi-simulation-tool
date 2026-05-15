@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { devices } from '../data/osiEducationalData';
 
 const DeviceSelector = ({ onSelect, title, selected }) => {

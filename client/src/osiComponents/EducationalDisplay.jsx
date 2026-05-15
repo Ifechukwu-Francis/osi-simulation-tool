@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { educationalContent } from '../data/osiEducationalData';
 
 const EducationalDisplay = ({ currentLayer, side, userMessage, selectedMessage }) => {
